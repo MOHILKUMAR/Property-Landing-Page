@@ -14,13 +14,17 @@ const Testinomial = () => {
   };
 
   return (
-    <div className="bg-gray-700 py-60">
+    <div className="bg-[#06112a] py-30">
+        <h1 className="text-xl font-bold  text-center my-5 text-green-500">Testimonial</h1>
+        <h1 className="text-center mb-8 text-4xl text-white">Clients We Help</h1>
       <div className="w-3/4 m-auto">
+      
+      
         <div className="">
             <Slider {...settings}>
           {data.map((d) => (
-            <div className="bg-white h-[450px] text-black rounded-xl">
-              <div className="rounded-t-xl h-56 bg-green-700 flex justify-center items-center">
+            <div className="bg-white h-[450px] text-black rounded-xl ">
+              <div className="rounded-t-xl h-56 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 flex justify-center items-center">
                 {" "}
                 <img src={d.img} alt="" className="h-44 w-44 rounded-full" />
               </div>
@@ -30,7 +34,7 @@ const Testinomial = () => {
                 <p>{d.review}</p>
                 <button className="bg-indigo-500 text-white text-lg p-2 rounded-lg">Read More</button>
               </div>
-              <div> </div>
+             
             </div>
           ))}
 
