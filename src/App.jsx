@@ -5,6 +5,7 @@ import Categories from './components/Categories'
 import FeaturedProperties from './components/FeaturedProperties'
 import About from './components/About'
 import GetInTouch from './components/GetInTouch'
+import Testinomial from './components/Testinomial'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <FeaturedProperties />
       <About />
       <GetInTouch />
+      <Testinomial />
     </div>
   )
 }
