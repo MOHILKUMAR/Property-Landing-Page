@@ -7,6 +7,8 @@ import About from "./components/About";
 import GetInTouch from "./components/GetInTouch";
 import Testinomial from "./components/Testinomial";
 import OurProperty from "./components/OurProperty";
+import Footer from "./components/Footer";
+import SubFooter from "./components/SubFooter";
 
 const App = () => {
   return (
@@ -16,9 +18,11 @@ const App = () => {
       <Categories />
       <Testinomial />
       <FeaturedProperties />
-      <About />
       <GetInTouch />
       <OurProperty />
+       <About />
+      <Footer/>
+      <SubFooter />
     </div>
   );
 };
