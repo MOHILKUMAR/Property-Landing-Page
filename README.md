@@ -37,3 +37,31 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 
+
+## Dark mode
+
+A sun/moon toggle in the navbar switches themes. The choice is saved in
+`localStorage`; first-time visitors get their OS preference. Dark styles use
+Tailwind's `dark:` variant, driven by a `dark` class on `<html>` (see
+`src/index.css` and the inline script in `index.html`).
+
+## Contact form (Resend)
+
+The "Request to Connect" form (`src/components/ContactForm.jsx`) posts to
+`/api/contact` (`api/contact.js`), which sends the request to your inbox with
+[Resend](https://resend.com). The API key stays on the server and is never
+shipped to the browser.
+
+1. Create an API key at https://resend.com/api-keys
+2. Copy `.env.example` to `.env.local` and fill in:
+   - `RESEND_API_KEY` - your Resend key
+   - `CONTACT_TO_EMAIL` - where requests are delivered
+   - `CONTACT_FROM_EMAIL` - sender; must be on a domain verified in Resend.
+     Until you verify one, keep `onboarding@resend.dev`, which can only deliver
+     to your own Resend account's email address.
+3. `npm run dev` - the Vite dev server serves `/api/contact` locally.
+
+**Deploying:** on Vercel, `api/contact.js` runs as a serverless function
+automatically; add the three variables under Project Settings > Environment
+Variables. On static-only hosts (e.g. GitHub Pages, plain Netlify) the form
+needs a backend, since the Resend API can't be called from the browser.
