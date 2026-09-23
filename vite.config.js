@@ -1,15 +1,15 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import contactHandler from './api/contact.js'
+import { handleNodeRequest } from './server/node.js'
 
 // Serves the /api/contact function locally, so `npm run dev` and
-// `npm run preview` behave like the Vercel deployment.
+// `npm run preview` behave like the deployed site.
 const contactApi = (env) => {
   const mount = (middlewares) => {
     middlewares.use('/api/contact', (req, res) => {
       // Never let a bad request take down the whole dev server
-      contactHandler(req, res, env).catch((err) => {
+      handleNodeRequest(req, res, env).catch((err) => {
         console.error('[contact]', err)
         if (!res.headersSent) {
           res.statusCode = 500
