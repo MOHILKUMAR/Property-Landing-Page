@@ -5,7 +5,7 @@ import logo_contact_Us from "../assets/contacts-book-2-fill.svg";
 
 const Banner = () => {
   return (
-    <div className="bg-[#06112a] text-white flex flex-wrap justify-center sm:justify-around gap-4 w-full p-3 sm:p-4 text-sm sm:text-base">
+    <div className="bg-primary-950 text-white flex flex-wrap justify-center sm:justify-around gap-4 w-full p-3 sm:p-4 text-sm sm:text-base">
       <div className="flex flex-row items-center">
         <div>
           {" "}
@@ -13,9 +13,9 @@ const Banner = () => {
         </div>
         <div>
           <p>
-            <span className="text-green-600">Free Call </span>+91-8077108275
+            <span className="text-accent-400">Free Call </span>+91-8077108275
           </p>
-          <p className="text-gray-400">Call Us Now 24/7 Customer Support</p>
+          <p className="text-primary-200">Call Us Now 24/7 Customer Support</p>
         </div>
       </div>
 
@@ -26,10 +26,10 @@ const Banner = () => {
         </div>
         <div>
           <p>
-            <span className="text-green-600">Our </span>
+            <span className="text-accent-400">Our </span>
               Location
           </p>
-          <p className="text-gray-400">Suite 721 New York NY 10016</p>
+          <p className="text-primary-200">Suite 721 New York NY 10016</p>
         </div>
       </div>
       <div className="hidden md:flex flex-row items-center">
@@ -38,9 +38,9 @@ const Banner = () => {
         </div>
         <div>
           <p>
-            <span className="text-green-600">Connect</span> with us
+            <span className="text-accent-400">Connect</span> with us
           </p>
-          <p className="text-gray-400">Facebook Twitter Dribbble</p>
+          <p className="text-primary-200">Facebook Twitter Dribbble</p>
         </div>
       </div>
     </div>

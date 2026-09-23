@@ -18,24 +18,24 @@ const OurProperty = () => {
   };
 
   return (
-    <div className="pt-16 sm:pt-20 w-full flex justify-center items-center flex-col bg-[#06112a] opacity-95">
-        <h1 className="text-center text-xl font-bold text-green-500 " >Our Property</h1>
-        <p className="text-center w-11/12 sm:w-3/4 mt-6 sm:mt-10 text-white text-lg sm:text-2xl">Discover modern, luxurious, and affordable properties tailored to your lifestyle. From cozy apartments to spacious villas, we bring you the best choices in prime locations.</p>
+    <div className="pt-16 sm:pt-20 w-full flex justify-center items-center flex-col bg-primary-900">
+        <h1 className="text-center text-xl font-bold text-accent-400" >Our Property</h1>
+        <p className="text-center w-11/12 sm:w-3/4 mt-6 sm:mt-10 text-primary-100 font-light text-lg sm:text-2xl">Discover modern, luxurious, and affordable properties tailored to your lifestyle. From cozy apartments to spacious villas, we bring you the best choices in prime locations.</p>
 
  <div className="w-11/12 sm:w-3/4 mb-20 sm:mb-40 mt-12 sm:mt-20">
     <Slider {...settings}>
      {datas.map((data) => (
         <div
           key={data.id}
-          className="p-2 rounded-lg  hover:bg-gray-300 dark:hover:bg-slate-700 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-100"
+          className="p-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-700 cursor-pointer bg-white text-stone-900 dark:bg-stone-800 dark:text-stone-100 transition-colors"
         >
           <div className="w-full">
             <img src={data.image} alt="" className="h-50 w-full object-cover rounded" />
           </div>
           <div>
-            <p className="text-xl sm:text-2xl">{data.title}</p>
-            <p className="font-semibold">{data.location}</p>
-            <p className="font-bold">{data.price}</p>
+            <p className="text-xl sm:text-2xl font-semibold">{data.title}</p>
+            <p className="text-stone-500 dark:text-stone-400">{data.location}</p>
+            <p className="font-bold text-primary-700 dark:text-accent-400">{data.price}</p>
           </div>
         </div>
       ))}

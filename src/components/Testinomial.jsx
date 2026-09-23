@@ -17,25 +17,25 @@ const Testinomial = () => {
   };
 
   return (
-    <div id="testimonials" className="bg-[#06112a] py-16 sm:py-30">
-        <h1 className="text-xl font-bold  text-center my-5 text-green-500">Testimonial</h1>
-        <h1 className="text-center mb-8 text-3xl sm:text-4xl text-white">Clients We Help</h1>
+    <div id="testimonials" className="bg-primary-950 py-16 sm:py-30">
+        <h1 className="text-xl font-bold  text-center my-5 text-accent-400">Testimonial</h1>
+        <h1 className="text-center mb-8 text-3xl sm:text-4xl font-semibold tracking-tight text-white">Clients We Help</h1>
       <div className="w-11/12 sm:w-3/4 m-auto">
 
 
         <div className="">
             <Slider {...settings}>
           {data.map((d) => (
-            <div key={d.name} className="bg-white dark:bg-slate-800 min-h-[450px] text-black dark:text-slate-100 rounded-xl ">
-              <div className="rounded-t-xl h-56 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 flex justify-center items-center">
+            <div key={d.name} className="bg-white dark:bg-stone-900 min-h-[450px] text-stone-900 dark:text-stone-100 rounded-2xl">
+              <div className="rounded-t-2xl h-56 bg-linear-to-br from-primary-500 via-primary-700 to-primary-900 flex justify-center items-center">
                 {" "}
-                <img src={d.img} alt="" className="h-44 w-44 rounded-full object-cover" />
+                <img src={d.img} alt="" className="h-44 w-44 rounded-full object-cover ring-4 ring-accent-400" />
               </div>
               <div className="flex flex-col justify-center items-center text-center gap-4 p-4">
                 {" "}
                 <p className="text-xl font-semibold">{d.name}</p>
-                <p>{d.review}</p>
-                <button className="bg-indigo-500 text-white text-lg p-2 rounded-lg">Read More</button>
+                <p className="text-stone-600 dark:text-stone-300">{d.review}</p>
+                <button className="bg-accent-500 hover:bg-accent-400 text-primary-950 font-semibold text-lg py-2 px-4 rounded-lg transition-colors">Read More</button>
               </div>
 
             </div>
