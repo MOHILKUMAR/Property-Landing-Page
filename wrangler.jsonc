@@ -1,0 +1,19 @@
+// Cloudflare Workers deployment: `npm run deploy` builds the site and uploads
+// it with the contact-form API. Secrets (RESEND_API_KEY, CONTACT_TO_EMAIL,
+// CONTACT_FROM_EMAIL) are set in the Cloudflare dashboard or with
+// `npx wrangler secret put <NAME>`, never in this file.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "property-landing-page",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  }
+}

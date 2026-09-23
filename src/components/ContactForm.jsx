@@ -82,7 +82,9 @@ const ContactForm = () => {
           setErrors(data.fields);
           focusField(FIELD_ORDER.find((name) => data.fields[name]));
         }
-        throw new Error(data.error || "Something went wrong. Please try again.");
+        throw new Error(
+          data.error || `Something went wrong (error ${res.status}). Please try again.`
+        );
       }
 
       setStatus("success");
