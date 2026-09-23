@@ -2,18 +2,18 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="bg-[#06112a] flex justify-around py-40 text-white p-20 ">
-      <div className="grid grid-cols-5 gap-2">
+    <div className="bg-[#06112a] text-white px-6 py-16 sm:px-12 lg:px-20 lg:py-32">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 max-w-7xl mx-auto">
         <div className="">
           <h1 className="text-3xl font-bold hover:text-green-500">MSr</h1>
           <p>Real Estate Agency</p>
-          <p className="mt-10 hover:text-green-500 ">
+          <p className="mt-6 lg:mt-10 hover:text-green-500 ">
             A small river named Duden flows by their place and supplies it with
             the necessary regelialia.
           </p>
           <div></div>
         </div>
-        <div className="pl-20">
+        <div className="lg:pl-8">
           <h1 className="text-xl font-bold hover:text-green-500">Offers</h1>
 
           <p className="mt-2 hover:text-green-500 ">Properties</p>
@@ -21,14 +21,14 @@ const Footer = () => {
           <p className="mt-2 hover:text-green-500 ">Locations</p>
           <p className="mt-2 hover:text-green-500 ">Clients Support</p>
         </div>
-        <div className="pl-20">
+        <div className="lg:pl-8">
           <h1 className="text-xl font-bold hover:text-green-500">Company</h1>
           <p className="mt-2 hover:text-green-500 ">Home</p>
           <p className="mt-2 hover:text-green-500 ">About</p>
           <p className="mt-2 hover:text-green-500 ">Blog</p>
           <p className="mt-2 hover:text-green-500 ">Contact Us</p>
         </div>
-        <div className="pl-20">
+        <div className="lg:pl-8">
           <h1 className="text-xl font-bold hover:text-green-500">
             Quick Links
           </h1>
@@ -37,7 +37,7 @@ const Footer = () => {
           <p className="mt-2 hover:text-green-500 ">Support Center</p>
           <p className="mt-2 hover:text-green-500 ">Press Info</p>
         </div>
-        <div className="pl-20">
+        <div className="lg:pl-8">
           <h1 className="text-xl font-bold hover:text-green-500">
             Have a Questions?
           </h1>
@@ -46,7 +46,7 @@ const Footer = () => {
             203 Fake St. Mountain View, San Francisco, California, USA
           </p>
           <p className="mt-2 hover:text-green-500 "> +2 392 3929 210</p>
-          <p className="mt-2 hover:text-green-500 "> info@yourdomain.com</p>
+          <p className="mt-2 hover:text-green-500 break-words"> info@yourdomain.com</p>
         </div>
       </div>
     </div>

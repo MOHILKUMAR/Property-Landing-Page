@@ -2,35 +2,38 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import useSlidesToShow from "../hooks/useSlidesToShow";
 
 const OurProperty = () => {
+ const slidesToShow = useSlidesToShow();
  var settings = {
     dots: false,
     infinite: true,
-    slidesToShow: 3,
+    slidesToShow,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 1000,
-    pauseOnHover: true
+    pauseOnHover: true,
+    arrows: slidesToShow > 1,
   };
 
   return (
-    <div className="pt-20 w-full flex justify-center items-center flex-col bg-[#06112a] opacity-95">
+    <div className="pt-16 sm:pt-20 w-full flex justify-center items-center flex-col bg-[#06112a] opacity-95">
         <h1 className="text-center text-xl font-bold text-green-500 " >Our Property</h1>
-        <p className="text-center w-3/4 mt-10 text-white text-2xl">Discover modern, luxurious, and affordable properties tailored to your lifestyle. From cozy apartments to spacious villas, we bring you the best choices in prime locations.</p>
+        <p className="text-center w-11/12 sm:w-3/4 mt-6 sm:mt-10 text-white text-lg sm:text-2xl">Discover modern, luxurious, and affordable properties tailored to your lifestyle. From cozy apartments to spacious villas, we bring you the best choices in prime locations.</p>
 
- <div className="w-3/4 mb-40 mt-20">
+ <div className="w-11/12 sm:w-3/4 mb-20 sm:mb-40 mt-12 sm:mt-20">
     <Slider {...settings}>
      {datas.map((data) => (
         <div
           key={data.id}
-          className="p-2 rounded-lg  hover:bg-gray-300  cursor-pointer bg-white"
+          className="p-2 rounded-lg  hover:bg-gray-300 dark:hover:bg-slate-700 cursor-pointer bg-white dark:bg-slate-800 dark:text-slate-100"
         >
           <div className="w-full">
-            <img src={data.image} alt="" className="h-50 w-full" />
+            <img src={data.image} alt="" className="h-50 w-full object-cover rounded" />
           </div>
           <div>
-            <p className="text-2xl">{data.title}</p>
+            <p className="text-xl sm:text-2xl">{data.title}</p>
             <p className="font-semibold">{data.location}</p>
             <p className="font-bold">{data.price}</p>
           </div>
