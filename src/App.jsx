@@ -14,7 +14,7 @@ import SubFooter from "./components/SubFooter";
 
 const App = () => {
   return (
-    <div className="bg-white text-gray-900 dark:bg-slate-950 dark:text-slate-100 overflow-x-clip">
+    <div className="bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100 overflow-x-clip">
       <Banner />
       <Navbar />
       <Home />

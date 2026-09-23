@@ -3,10 +3,10 @@ import FeatureCard from './FeatureCard'
 
 const FeaturedProperties = () => {
   return (
-    <div id='properties' className='py-16 sm:py-20 px-4 dark:bg-slate-950'>
+    <div id='properties' className='py-16 sm:py-20 px-4 dark:bg-stone-950'>
      <div className='text-center flex flex-col space-y-4 sm:space-y-8 mb-12 sm:mb-25'>
-        <p className='font-bold text-green-500'>OUR PROPERTIES</p>
-        <h1 className='text-3xl sm:text-4xl font-medium dark:text-white'>Featured Properties</h1>
+        <p className='font-bold tracking-widest text-accent-700 dark:text-accent-400'>OUR PROPERTIES</p>
+        <h1 className='text-3xl sm:text-4xl font-semibold tracking-tight text-primary-950 dark:text-white'>Featured Properties</h1>
      </div>
        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 max-w-7xl mx-auto mb-10 sm:mb-20'>
           <FeatureCard />

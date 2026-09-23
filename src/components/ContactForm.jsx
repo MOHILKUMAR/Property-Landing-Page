@@ -13,11 +13,11 @@ const initialForm = {
 const FIELD_ORDER = ["name", "email", "phone", "interest", "message"];
 
 const inputClass =
-  "w-full rounded-lg border bg-white dark:bg-slate-900 px-4 py-2.5 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:border-transparent";
-const validClass = "border-gray-300 dark:border-slate-600 focus:ring-green-500";
+  "w-full rounded-lg border bg-white dark:bg-stone-950 px-4 py-2.5 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:outline-none focus:ring-2 focus:border-transparent";
+const validClass = "border-stone-300 dark:border-stone-700 focus:ring-primary-500";
 const invalidClass = "border-red-500 dark:border-red-400 focus:ring-red-500";
 
-const labelClass = "block mb-1.5 text-sm font-medium text-gray-700 dark:text-slate-300";
+const labelClass = "block mb-1.5 text-sm font-medium text-stone-700 dark:text-stone-300";
 
 const ContactForm = () => {
   const [form, setForm] = useState(initialForm);
@@ -116,24 +116,24 @@ const ContactForm = () => {
     );
 
   return (
-    <section id="contact" className="bg-white dark:bg-slate-950 py-16 sm:py-24 px-4 sm:px-6">
+    <section id="contact" className="bg-white dark:bg-stone-950 py-16 sm:py-24 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
         <div>
-          <p className="text-xl font-bold text-green-500 mb-4">Contact Us</p>
-          <h1 className="text-3xl sm:text-4xl mb-6 dark:text-white">Request to Connect</h1>
-          <p className="text-gray-500 dark:text-slate-400 text-lg mb-8">
+          <p className="text-xl font-bold text-accent-700 dark:text-accent-400 mb-4">Contact Us</p>
+          <h1 className="text-3xl sm:text-4xl mb-6 font-semibold tracking-tight text-primary-950 dark:text-white">Request to Connect</h1>
+          <p className="text-stone-500 dark:text-stone-400 text-lg mb-8">
             Looking to buy, rent or sell? Share a few details and one of our
             realtors will get back to you within 24 hours.
           </p>
-          <ul className="space-y-4 text-gray-700 dark:text-slate-300">
+          <ul className="space-y-4 text-stone-700 dark:text-stone-300">
             <li>
-              <span className="font-semibold text-green-600">Call:</span> +91-8077108275
+              <span className="font-semibold text-primary-700 dark:text-accent-400">Call:</span> +91-8077108275
             </li>
             <li>
-              <span className="font-semibold text-green-600">Visit:</span> Suite 721 New York NY 10016
+              <span className="font-semibold text-primary-700 dark:text-accent-400">Visit:</span> Suite 721 New York NY 10016
             </li>
             <li>
-              <span className="font-semibold text-green-600">Hours:</span> 24/7 Customer Support
+              <span className="font-semibold text-primary-700 dark:text-accent-400">Hours:</span> 24/7 Customer Support
             </li>
           </ul>
         </div>
@@ -142,7 +142,7 @@ const ContactForm = () => {
           ref={formRef}
           onSubmit={handleSubmit}
           noValidate
-          className="bg-neutral-100 dark:bg-slate-800 rounded-2xl shadow-md p-6 sm:p-8 space-y-5"
+          className="bg-stone-100 dark:bg-stone-900 rounded-2xl shadow-md p-6 sm:p-8 space-y-5"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
@@ -206,7 +206,7 @@ const ContactForm = () => {
             />
             <div className="flex justify-between gap-4">
               <div>{fieldError("message")}</div>
-              <p className="mt-1.5 text-xs text-gray-500 dark:text-slate-400 shrink-0">
+              <p className="mt-1.5 text-xs text-stone-500 dark:text-stone-400 shrink-0">
                 {form.message.length}/{LIMITS.message.max}
               </p>
             </div>
@@ -229,14 +229,14 @@ const ContactForm = () => {
           <button
             type="submit"
             disabled={status === "sending"}
-            className="w-full sm:w-auto bg-green-500 hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-mono font-medium py-3 px-8 rounded-lg transition-colors cursor-pointer"
+            className="w-full sm:w-auto bg-accent-500 hover:bg-accent-400 disabled:opacity-60 disabled:cursor-not-allowed text-primary-950 font-semibold py-3 px-8 rounded-lg transition-colors cursor-pointer"
           >
             {status === "sending" ? "Sending..." : "Send Request"}
           </button>
 
           <div aria-live="polite">
             {status === "success" && (
-              <p className="rounded-lg bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 px-4 py-3">
+              <p className="rounded-lg bg-primary-50 dark:bg-primary-900/40 text-primary-800 dark:text-primary-200 px-4 py-3">
                 Thanks! Your request has been sent. We'll be in touch soon.
               </p>
             )}

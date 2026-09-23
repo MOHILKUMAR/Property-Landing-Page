@@ -4,7 +4,7 @@ import CtaButton from "./CtaButton";
 
 const FeatureCard = () => {
   return (
-    <div className=" overflow-hidden rounded-2xl shadow-md hover:shadow-lg transition bg-white hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100">
+    <div className=" overflow-hidden rounded-2xl shadow-md hover:shadow-lg transition bg-white hover:bg-stone-50 ring-1 ring-stone-200 dark:ring-stone-800 dark:bg-stone-900 dark:hover:bg-stone-800 dark:text-stone-100">
       <div className="relative overflow-hidden group ">
         <img
           src={CARD_IMG_URL}
@@ -12,7 +12,7 @@ const FeatureCard = () => {
           width={250}
           className="h-56 rounded-2xl w-full object-cover transform transition-transform duration-500 group-hover:scale-110"
         />
-        <span className="absolute bottom-3 left-3 bg-green-600 text-white px-3 py-1 rounded-md text-sm font-semibold">
+        <span className="absolute bottom-3 left-3 bg-accent-500 text-primary-950 px-3 py-1 rounded-md text-sm font-semibold">
           $300,000
         </span>
       </div>
@@ -23,11 +23,11 @@ const FeatureCard = () => {
           src="https://static.vecteezy.com/system/resources/thumbnails/005/346/410/small_2x/close-up-portrait-of-smiling-handsome-young-caucasian-man-face-looking-at-camera-on-isolated-light-gray-studio-background-photo.jpg"
           alt=""
         />
-        <p className="mr-auto p-2 text-gray-500 dark:text-slate-400">JHON DOE</p>
-        <p className="p-2 text-sm text-gray-600 dark:text-slate-400">2 weeks ago</p>
+        <p className="mr-auto p-2 text-stone-500 dark:text-stone-400">JHON DOE</p>
+        <p className="p-2 text-sm text-stone-500 dark:text-stone-400">2 weeks ago</p>
       </div>
 
-      <h1 className=" text-xl p-2 ">Sunny Loft Property</h1>
+      <h1 className="text-xl font-semibold text-primary-950 dark:text-white p-2">Sunny Loft Property</h1>
 
       <div className="my-2 flex justify-between pb-10 p-2">
         <div className="flex justify-center items-center">
@@ -36,9 +36,9 @@ const FeatureCard = () => {
             alt=""
             className="w-4 h-4 m-1 mix-blend-multiply dark:invert dark:mix-blend-screen"
           />
-          <p className="text-gray-500 dark:text-slate-400">New York</p>
+          <p className="text-stone-500 dark:text-stone-400">New York</p>
         </div>
-        <button className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+        <button className="cursor-pointer bg-primary-700 hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-500 text-white font-medium px-4 py-1.5 rounded-lg transition-colors">
           Rent
         </button>
       </div>

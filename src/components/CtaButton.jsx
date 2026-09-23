@@ -2,7 +2,7 @@ import React from "react";
 
 const CtaButton = ({ value, href, onClick }) => {
   const className =
-    "inline-block bg-green-500 font-mono font-medium p-2 px-4 hover:bg-green-700 hover:text-black text-white rounded-lg transition-colors";
+    "inline-block bg-accent-500 text-primary-950 font-semibold p-2 px-4 hover:bg-accent-400 rounded-lg transition-colors";
 
   return (
     <div>

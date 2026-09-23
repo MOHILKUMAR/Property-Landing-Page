@@ -11,7 +11,7 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Light mode" : "Dark mode"}
-      className="p-2 rounded-lg text-white hover:text-green-500 hover:bg-white/10 transition-colors cursor-pointer"
+      className="p-2 rounded-lg text-white hover:text-accent-400 hover:bg-white/10 transition-colors cursor-pointer"
     >
       {isDark ? (
         // Sun
