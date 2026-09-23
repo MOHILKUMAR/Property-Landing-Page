@@ -4,9 +4,15 @@
 // Vite dev/preview server by the plugin in vite.config.js for local use.
 // Only uses plain Node req/res APIs so it works in both places.
 import { Resend } from "resend";
+import { validateContact } from "../src/utils/contactValidation.js";
 
-const LIMITS = { name: 100, email: 254, phone: 30, interest: 50, message: 5000 };
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_BODY_BYTES = 16_000;
+
+// Best-effort cap on emails sent per IP. The counts live in this instance's
+// memory, so on serverless hosts they reset on cold starts and aren't shared
+// between instances; use a platform firewall or Redis for a global limit.
+const RATE_LIMIT = { max: 5, windowMs: 10 * 60 * 1000 };
+const sendsByIp = new Map();
 
 const escapeHtml = (value) =>
   value
@@ -19,40 +25,56 @@ const escapeHtml = (value) =>
 const sendJson = (res, status, body) => {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json");
+  res.setHeader("Cache-Control", "no-store");
   res.end(JSON.stringify(body));
+};
+
+const clientIp = (req) =>
+  req.headers["x-real-ip"] ||
+  req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+  req.socket?.remoteAddress ||
+  "unknown";
+
+// Browsers always send Origin on POST, so this blocks other websites from
+// submitting to this endpoint on their visitors' behalf.
+const isSameOrigin = (req) => {
+  try {
+    return new URL(req.headers.origin).host === req.headers.host;
+  } catch {
+    return false;
+  }
+};
+
+const isRateLimited = (ip) => {
+  const now = Date.now();
+  const recent = (sendsByIp.get(ip) || []).filter((t) => now - t < RATE_LIMIT.windowMs);
+  const limited = recent.length >= RATE_LIMIT.max;
+  if (!limited) recent.push(now);
+  sendsByIp.set(ip, recent);
+
+  // Keep memory bounded by dropping IPs with no recent sends
+  if (sendsByIp.size > 5000) {
+    for (const [key, times] of sendsByIp) {
+      if (!times.some((t) => now - t < RATE_LIMIT.windowMs)) sendsByIp.delete(key);
+    }
+  }
+  return limited;
 };
 
 // Vercel pre-parses JSON bodies; the Vite dev server does not.
 const readBody = async (req) => {
-  if (req.body && typeof req.body === "object") return req.body;
+  if (req.body !== undefined && typeof req.body !== "string") return req.body;
   if (typeof req.body === "string") return JSON.parse(req.body);
 
   const chunks = [];
   let size = 0;
   for await (const chunk of req) {
     size += chunk.length;
-    if (size > 100_000) throw new Error("Body too large");
+    if (size > MAX_BODY_BYTES) throw new Error("Body too large");
     chunks.push(chunk);
   }
   const raw = Buffer.concat(chunks).toString("utf8");
   return raw ? JSON.parse(raw) : {};
-};
-
-const validate = (body) => {
-  const data = {};
-  for (const field of Object.keys(LIMITS)) {
-    const value = body[field];
-    data[field] = typeof value === "string" ? value.trim() : "";
-    if (data[field].length > LIMITS[field]) {
-      return { error: `${field} is too long.` };
-    }
-  }
-
-  if (!data.name) return { error: "Please enter your name." };
-  if (!EMAIL_RE.test(data.email)) return { error: "Please enter a valid email address." };
-  if (!data.message) return { error: "Please enter a message." };
-
-  return { data };
 };
 
 const buildEmail = ({ name, email, phone, interest, message }) => {
@@ -90,10 +112,20 @@ const buildEmail = ({ name, email, phone, interest, message }) => {
   return { html, text };
 };
 
-export default async function handler(req, res) {
+// `env` defaults to process.env (Vercel); the Vite plugin passes values it
+// loaded from .env files.
+export default async function handler(req, res, env = process.env) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return sendJson(res, 405, { error: "Method not allowed." });
+  }
+
+  if (!isSameOrigin(req)) {
+    return sendJson(res, 403, { error: "Forbidden." });
+  }
+
+  if (!req.headers["content-type"]?.startsWith("application/json")) {
+    return sendJson(res, 415, { error: "Content-Type must be application/json." });
   }
 
   let body;
@@ -102,18 +134,30 @@ export default async function handler(req, res) {
   } catch {
     return sendJson(res, 400, { error: "Invalid request body." });
   }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return sendJson(res, 400, { error: "Invalid request body." });
+  }
 
   // Bots fill every field, including the hidden honeypot. Pretend it worked.
   if (body.company) return sendJson(res, 200, { ok: true });
 
-  const { data, error: validationError } = validate(body);
-  if (validationError) return sendJson(res, 400, { error: validationError });
+  const { data, errors, isValid } = validateContact(body);
+  if (!isValid) {
+    return sendJson(res, 400, { error: "Please fix the highlighted fields.", fields: errors });
+  }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO_EMAIL;
+  const apiKey = env.RESEND_API_KEY;
+  const to = env.CONTACT_TO_EMAIL;
   if (!apiKey || !to) {
     console.error("[contact] RESEND_API_KEY and CONTACT_TO_EMAIL must be set.");
     return sendJson(res, 500, { error: "Email service is not configured yet." });
+  }
+
+  if (isRateLimited(clientIp(req))) {
+    res.setHeader("Retry-After", String(RATE_LIMIT.windowMs / 1000));
+    return sendJson(res, 429, {
+      error: "Too many requests. Please try again in a few minutes.",
+    });
   }
 
   const resend = new Resend(apiKey);
@@ -121,10 +165,10 @@ export default async function handler(req, res) {
 
   try {
     const { data: sent, error } = await resend.emails.send({
-      from: process.env.CONTACT_FROM_EMAIL || "MSr Real Estates <onboarding@resend.dev>",
+      from: env.CONTACT_FROM_EMAIL || "MSr Real Estates <onboarding@resend.dev>",
       to: to.split(",").map((address) => address.trim()),
       replyTo: data.email,
-      subject: `New connect request from ${data.name.replace(/[\r\n]+/g, " ")}`,
+      subject: `New connect request from ${data.name}`,
       html,
       text,
     });

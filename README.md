@@ -61,6 +61,17 @@ shipped to the browser.
      to your own Resend account's email address.
 3. `npm run dev` - the Vite dev server serves `/api/contact` locally.
 
+**Abuse protection:** the form and the API share the same validation rules
+(`src/utils/contactValidation.js`). The browser checks only give instant
+feedback; `api/contact.js` enforces them again, because anyone can call the
+API directly. The API also rejects requests from other websites (Origin
+check) and non-JSON or oversized bodies, drops bots that fill a hidden
+honeypot field, escapes all user input in the email, and allows each IP 5
+emails per 10 minutes. That rate limit is kept in memory, so on Vercel it is
+per-instance only; for a hard global limit, add a Vercel Firewall rate-limit
+rule or a Redis-backed limiter, and consider a CAPTCHA such as Cloudflare
+Turnstile if spam gets through.
+
 **Deploying:** on Vercel, `api/contact.js` runs as a serverless function
 automatically; add the three variables under Project Settings > Environment
 Variables. On static-only hosts (e.g. GitHub Pages, plain Netlify) the form

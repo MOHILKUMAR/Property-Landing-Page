@@ -5,10 +5,17 @@ import contactHandler from './api/contact.js'
 
 // Serves the /api/contact function locally, so `npm run dev` and
 // `npm run preview` behave like the Vercel deployment.
-const contactApi = () => {
+const contactApi = (env) => {
   const mount = (middlewares) => {
     middlewares.use('/api/contact', (req, res) => {
-      contactHandler(req, res)
+      // Never let a bad request take down the whole dev server
+      contactHandler(req, res, env).catch((err) => {
+        console.error('[contact]', err)
+        if (!res.headersSent) {
+          res.statusCode = 500
+          res.end()
+        }
+      })
     })
   }
   return {
@@ -20,11 +27,13 @@ const contactApi = () => {
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  // Expose server-only secrets (RESEND_API_KEY, ...) from .env files to the
-  // API handler. Only VITE_-prefixed vars ever reach the browser bundle.
-  Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
+  // Hand server-only secrets (RESEND_API_KEY, ...) from .env files straight to
+  // the API handler. Don't copy them into process.env: Vite restarts in-process
+  // when .env files change, and loadEnv prefers existing process.env values, so
+  // edits would be ignored. Only VITE_-prefixed vars reach the browser bundle.
+  const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), tailwindcss(), contactApi()],
+    plugins: [react(), tailwindcss(), contactApi(env)],
   }
 })

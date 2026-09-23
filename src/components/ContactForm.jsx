@@ -1,33 +1,71 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { INTERESTS, LIMITS, validateContact } from "../utils/contactValidation";
 
 const initialForm = {
   name: "",
   email: "",
   phone: "",
-  interest: "Buying",
+  interest: INTERESTS[0],
   message: "",
   company: "", // honeypot: real users never see or fill this
 };
 
-const interests = ["Buying", "Renting", "Selling", "Investing", "Other"];
+const FIELD_ORDER = ["name", "email", "phone", "interest", "message"];
 
 const inputClass =
-  "w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-2.5 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent";
+  "w-full rounded-lg border bg-white dark:bg-slate-900 px-4 py-2.5 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:border-transparent";
+const validClass = "border-gray-300 dark:border-slate-600 focus:ring-green-500";
+const invalidClass = "border-red-500 dark:border-red-400 focus:ring-red-500";
 
 const labelClass = "block mb-1.5 text-sm font-medium text-gray-700 dark:text-slate-300";
 
 const ContactForm = () => {
   const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
   const [error, setError] = useState("");
+  const formRef = useRef(null);
+
+  // Re-check a single field against the shared rules
+  const checkField = (name, values) => {
+    const message = validateContact(values).errors[name];
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (message) next[name] = message;
+      else delete next[name];
+      return next;
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const next = { ...form, [name]: value };
+    setForm(next);
+    // Once a field has shown an error, clear it as soon as it's fixed
+    if (errors[name]) checkField(name, next);
   };
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    // Don't nag about empty required fields just because focus moved on
+    if (form[name].trim() === "" && name !== "phone") return;
+    checkField(name, form);
+  };
+
+  const focusField = (name) => formRef.current?.elements[name]?.focus();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (status === "sending") return;
+
+    const { errors: found, isValid } = validateContact(form);
+    setErrors(found);
+    if (!isValid) {
+      setStatus("idle");
+      focusField(FIELD_ORDER.find((name) => found[name]));
+      return;
+    }
+
     setStatus("sending");
     setError("");
 
@@ -40,16 +78,40 @@ const ContactForm = () => {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
+        if (data.fields) {
+          setErrors(data.fields);
+          focusField(FIELD_ORDER.find((name) => data.fields[name]));
+        }
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
 
       setStatus("success");
       setForm(initialForm);
+      setErrors({});
     } catch (err) {
       setStatus("error");
       setError(err.message || "Network error. Please try again.");
     }
   };
+
+  // Props shared by every validated field
+  const fieldProps = (name) => ({
+    id: name,
+    name,
+    value: form[name],
+    onChange: handleChange,
+    onBlur: handleBlur,
+    "aria-invalid": errors[name] ? true : undefined,
+    "aria-describedby": errors[name] ? `${name}-error` : undefined,
+    className: `${inputClass} ${errors[name] ? invalidClass : validClass}`,
+  });
+
+  const fieldError = (name) =>
+    errors[name] && (
+      <p id={`${name}-error`} className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+        {errors[name]}
+      </p>
+    );
 
   return (
     <section id="contact" className="bg-white dark:bg-slate-950 py-16 sm:py-24 px-4 sm:px-6">
@@ -75,39 +137,35 @@ const ContactForm = () => {
         </div>
 
         <form
+          ref={formRef}
           onSubmit={handleSubmit}
+          noValidate
           className="bg-neutral-100 dark:bg-slate-800 rounded-2xl shadow-md p-6 sm:p-8 space-y-5"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label htmlFor="name" className={labelClass}>Full name *</label>
               <input
-                id="name"
-                name="name"
+                {...fieldProps("name")}
                 type="text"
                 required
-                maxLength={100}
+                maxLength={LIMITS.name.max}
                 autoComplete="name"
-                value={form.name}
-                onChange={handleChange}
                 placeholder="John Doe"
-                className={inputClass}
               />
+              {fieldError("name")}
             </div>
             <div>
               <label htmlFor="email" className={labelClass}>Email *</label>
               <input
-                id="email"
-                name="email"
+                {...fieldProps("email")}
                 type="email"
                 required
-                maxLength={254}
+                maxLength={LIMITS.email.max}
                 autoComplete="email"
-                value={form.email}
-                onChange={handleChange}
                 placeholder="you@example.com"
-                className={inputClass}
               />
+              {fieldError("email")}
             </div>
           </div>
 
@@ -115,46 +173,41 @@ const ContactForm = () => {
             <div>
               <label htmlFor="phone" className={labelClass}>Phone</label>
               <input
-                id="phone"
-                name="phone"
+                {...fieldProps("phone")}
                 type="tel"
-                maxLength={30}
+                maxLength={LIMITS.phone.max}
                 autoComplete="tel"
-                value={form.phone}
-                onChange={handleChange}
                 placeholder="+91 98765 43210"
-                className={inputClass}
               />
+              {fieldError("phone")}
             </div>
             <div>
               <label htmlFor="interest" className={labelClass}>I'm interested in</label>
-              <select
-                id="interest"
-                name="interest"
-                value={form.interest}
-                onChange={handleChange}
-                className={inputClass}
-              >
-                {interests.map((option) => (
+              <select {...fieldProps("interest")}>
+                {INTERESTS.map((option) => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
+              {fieldError("interest")}
             </div>
           </div>
 
           <div>
             <label htmlFor="message" className={labelClass}>Message *</label>
             <textarea
-              id="message"
-              name="message"
+              {...fieldProps("message")}
               required
               rows={5}
-              maxLength={5000}
-              value={form.message}
-              onChange={handleChange}
+              maxLength={LIMITS.message.max}
               placeholder="Tell us what you're looking for..."
-              className={`${inputClass} resize-y`}
+              className={`${fieldProps("message").className} resize-y`}
             />
+            <div className="flex justify-between gap-4">
+              <div>{fieldError("message")}</div>
+              <p className="mt-1.5 text-xs text-gray-500 dark:text-slate-400 shrink-0">
+                {form.message.length}/{LIMITS.message.max}
+              </p>
+            </div>
           </div>
 
           {/* Honeypot field, hidden from people and screen readers */}
